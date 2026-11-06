@@ -1,26 +1,43 @@
+# !pip install twscrape
+# !pip install python-dotenv
+
+import os
 import asyncio
 import csv
+from pathlib import Path
+from dotenv import load_dotenv
 from twscrape import AccountsPool, API
 from twscrape.logger import set_log_level
 
+
+# load .env dari folder root project
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 async def main():
     pool = AccountsPool()
 
     # Masukkan cookies akun yang valid
-    cookies = "auth_token=AUTH_TOKEN; ct0=CT0_VALUE"
+    cookies = f"auth_token={os.getenv('AUTH_TOKEN')}; ct0={os.getenv('CT0')}"
     
-    await pool.add_account("USERNAME_X", "PASSWORD_X", "username@mail.com", "password_email", cookies=cookies)
+    await pool.add_account(
+        os.getenv('USERNAME'), 
+        os.getenv('PASSWORD'), 
+        os.getenv('EMAIL'), 
+        os.getenv('EMAIL_PASSWORD'), 
+        cookies=cookies
+    )
     await pool.login_all()
 
     api = API(pool)
 
-    keywords = ["banjir", "gempa", "kebakaran", "kecelakaan"]
-    start_date = "2026-10-31"
-    end_date = "2026-10-31"
+    keywords_raw = os.getenv("KEYWORDS", "")
+    keywords = [kw.strip() for kw in keywords_raw.split(",")] if keywords_raw else ["banjir", "gempa", "kebakaran", "kecelakaan"]
+    start_date = os.getenv('START_DATE')
+    end_date = os.getenv('END_DATE')
 
     set_log_level("INFO")
-    filename = "hasil_tweet_bersih.csv"
+    filename = f"data/hasil_tweet_twscrape_{start_date}_{end_date}.csv"
 
     with open(
         filename, mode="w", newline="", encoding="utf-8-sig"
