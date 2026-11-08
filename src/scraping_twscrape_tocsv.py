@@ -12,16 +12,16 @@ from twscrape.logger import set_log_level
 
 # load .env dari folder root project
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
+load_dotenv(BASE_DIR / ".env", override=True)
 
 async def main():
     pool = AccountsPool()
 
-    # Masukkan cookies akun yang valid
+    # Masukkan cookies akun yang valid 
     cookies = f"auth_token={os.getenv('AUTH_TOKEN')}; ct0={os.getenv('CT0')}"
     
     await pool.add_account(
-        os.getenv('USERNAME'), 
+        os.getenv('TWITTER_USERNAME'), 
         os.getenv('PASSWORD'), 
         os.getenv('EMAIL'), 
         os.getenv('EMAIL_PASSWORD'), 
@@ -52,8 +52,8 @@ async def main():
             print(f"\nMencari kata kunci: '{kw}' ({start_date} s.d. {end_date})")
 
             try:
-                # Mengambil data dengan limit 10 per kata kunci untuk uji coba
-                async for tweet in api.search(query, limit=10):
+                # Mengambil data dengan limit 50 per kata kunci untuk uji coba
+                async for tweet in api.search(query, limit=50):
                     # Membersihkan teks tweet dari enter agar rapi di CSV
                     teks_bersih = tweet.rawContent.replace("\n", " ").replace("\r", " ")
 
@@ -66,6 +66,10 @@ async def main():
                         ]
                     )
                     print(f"[Berhasil Disimpan] ID: {tweet.id}")
+
+                    # BERIKAN JEDA (DELAY) 3 SAMPAI 5 DETIK ANTAR KATA KUNCI
+                    print("Menunggu sebentar agar aman...")
+                    await asyncio.sleep(4)
 
             except Exception as e:
                 print(f"Terjadi kesalahan saat mencari '{kw}': {e}")

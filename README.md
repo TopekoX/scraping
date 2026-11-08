@@ -104,7 +104,7 @@ KEYWORDS=banjir,gempa,kebakaran,kecelakaan
 # Khusus twscrape
 AUTH_TOKEN=your_auth_token
 CT0=your_ct0_value
-USERNAME=your_twitter_username
+TWITTER_USERNAME=your_twitter_username
 PASSWORD=your_twitter_password
 EMAIL=your_email
 EMAIL_PASSWORD=your_email_password
@@ -153,7 +153,7 @@ pip install twscrape python-dotenv
 Variabel yang dipakai selain variabel umum:
 
 - `AUTH_TOKEN` dan `CT0` adalah cookie yang dibutuhkan untuk login akun Twitter/X.
-- `USERNAME`, `PASSWORD`, `EMAIL`, dan `EMAIL_PASSWORD` digunakan pada proses `add_account()`.
+- `TWITTER_USERNAME`, `PASSWORD`, `EMAIL`, dan `EMAIL_PASSWORD` digunakan pada proses `add_account()`. Nama `TWITTER_USERNAME` (bukan `USERNAME`) dipakai agar tidak bentrok dengan variabel bawaan Windows.
 - Jika `KEYWORDS` tidak diisi, script akan memakai default keyword berikut: `banjir, gempa, kebakaran, kecelakaan`.
 
 Catatan:
@@ -188,7 +188,7 @@ data/hasil_tweet_twscrape_2026-10-01_2026-10-31.csv
 ### Error login akun
 
 Periksa kembali:
-- `USERNAME`
+- `TWITTER_USERNAME`
 - `PASSWORD`
 - `EMAIL`
 - `EMAIL_PASSWORD`
